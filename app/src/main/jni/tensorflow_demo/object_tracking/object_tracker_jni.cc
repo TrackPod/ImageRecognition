@@ -172,8 +172,11 @@ void JNICALL OBJECT_TRACKER_METHOD(registerNewObjectWithAppearanceNative)(
     jfloat x2, jfloat y2, jbyteArray frame_data) {
   const char* const id_str = env->GetStringUTFChars(object_id, 0);
 
-  LOGI("Registering the position of %s at %.2f,%.2f,%.2f,%.2f", id_str, x1, y1,
-       x2, y2);
+//  LOGI("Registering the position of %s at %.2f,%.2f,%.2f,%.2f", id_str, x1, y1,
+//       x2, y2);
+
+    LOGI("x1: %.2f, y1: %.2f, x2: %.2f, y2: %.2f", x1, y1,
+         x2, y2);
 
   jboolean iCopied = JNI_FALSE;
 
@@ -195,10 +198,10 @@ void JNICALL OBJECT_TRACKER_METHOD(setPreviousPositionNative)(
     jfloat x2, jfloat y2, jlong timestamp) {
   const char* const id_str = env->GetStringUTFChars(object_id, 0);
 
-  LOGI(
-      "Registering the position of %s at %.2f,%.2f,%.2f,%.2f"
-      " at time %lld",
-      id_str, x1, y1, x2, y2, static_cast<int64_t>(timestamp));
+//  LOGI(
+//      "Registering the position of %s at %.2f,%.2f,%.2f,%.2f"
+//      " at time %lld",
+//      id_str, x1, y1, x2, y2, static_cast<int64_t>(timestamp));
 
   get_object_tracker(env, thiz)->SetPreviousPositionOfObject(
       id_str, BoundingBox(x1, y1, x2, y2), timestamp);
@@ -214,6 +217,8 @@ void JNICALL OBJECT_TRACKER_METHOD(setCurrentPositionNative)(
 
   LOGI("Registering the position of %s at %.2f,%.2f,%.2f,%.2f", id_str, x1, y1,
        x2, y2);
+
+
 
   get_object_tracker(env, thiz)->SetCurrentPositionOfObject(
       id_str, BoundingBox(x1, y1, x2, y2));

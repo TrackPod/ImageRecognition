@@ -37,6 +37,7 @@ import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.nio.ByteBuffer;
@@ -76,6 +77,9 @@ public abstract class CameraActivity extends AppCompatActivity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_camera);
+
+//        Button coord = (Button)this.findViewById(R.id.coordButton);
+//        coord.setText("oncreate cam_act");
 
         if (hasPermission()) {
             setFragment();

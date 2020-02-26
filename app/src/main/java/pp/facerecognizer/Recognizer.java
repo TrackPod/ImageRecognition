@@ -24,6 +24,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.os.SystemClock;
+import android.widget.Button;
 
 import java.io.FileDescriptor;
 import java.nio.FloatBuffer;
@@ -145,6 +147,8 @@ public class Recognizer {
     }
 
     List<Recognition> recognizeImage(Bitmap bitmap, Matrix matrix) {
+
+
         synchronized (this) {
             List<RectF> faces = blazeFace.detect(bitmap);
             final List<Recognition> mappedRecognitions = new LinkedList<>();
@@ -160,8 +164,12 @@ public class Recognizer {
                 int index = prediction.getIndex();
 
                 String name = classNames.get(index);
-                Recognition result =
-                        new Recognition("" + index, name, prediction.getProb(), rectF);
+                //Recognition result = new Recognition("" + index, name, prediction.getProb(), rectF);
+                //sentinel
+
+                //Recognition result = new Recognition("" + index, "l:" + rect.left + " r:" + rect.right + " b:" + rect.bottom + " t:" + rect.top, prediction.getProb(), rectF);
+
+                Recognition result = new Recognition("" + index, "L:" + rect.left + " R:" + rect.right + " B:" + rect.bottom + " T:" + rect.top + ", ", 0f, rectF);
                 mappedRecognitions.add(result);
             }
             return mappedRecognitions;

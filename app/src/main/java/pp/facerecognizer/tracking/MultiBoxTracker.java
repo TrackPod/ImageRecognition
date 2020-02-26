@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import pp.facerecognizer.MainActivity;
 import pp.facerecognizer.Recognizer.Recognition;
 import pp.facerecognizer.env.BorderedText;
 import pp.facerecognizer.env.ImageUtils;
@@ -61,7 +62,7 @@ public class MultiBoxTracker {
     private static final float MIN_CORRELATION = 0.3f;
 
     private static final int[] COLORS = {
-            Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.WHITE,
+            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.WHITE,
             Color.parseColor("#55FF55"), Color.parseColor("#FFA500"), Color.parseColor("#FF8888"),
             Color.parseColor("#AAAAFF"), Color.parseColor("#FFFFAA"), Color.parseColor("#55AAAA"),
             Color.parseColor("#AA33AA"), Color.parseColor("#0D0068")
@@ -158,7 +159,7 @@ public class MultiBoxTracker {
 
     public synchronized void trackResults(
             final List<Recognition> results, final byte[] frame, final long timestamp) {
-        logger.i("Processing %d results from %d", results.size(), timestamp);
+        //logger.i("Processing %d results from %d", results.size(), timestamp);
         processResults(timestamp, results, frame);
     }
 
@@ -261,8 +262,12 @@ public class MultiBoxTracker {
             final RectF detectionScreenRect = new RectF();
             rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
 
-            logger.v(
-                    "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
+
+            // I think detectionScreenRect is the variable we want to access
+            //logger.v("Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
+
+            logger.v("L: " + detectionScreenRect.left + ", R: " + detectionScreenRect.right + ", T: " + detectionScreenRect.top + ", B: " + detectionScreenRect.bottom);
+
 
             screenRects.add(new Pair<>(result.getConfidence(), detectionScreenRect));
 
@@ -297,7 +302,7 @@ public class MultiBoxTracker {
             return;
         }
 
-        logger.i("%d rects to track", rectsToTrack.size());
+        //logger.i("%d rects to track", rectsToTrack.size());
         for (final Pair<Float, Recognition> potential : rectsToTrack) {
             handleDetection(originalFrame, timestamp, potential);
         }

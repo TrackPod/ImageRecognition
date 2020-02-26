@@ -76,7 +76,7 @@ extern "C" void JNI_FUNC_NAME(jniSvmTrain)(JNIEnv *env, jobject obj, jstring cmd
 // helper function to be called in Java for making svm-predict
 extern "C" void JNI_FUNC_NAME(jniSvmPredict)(JNIEnv *env, jobject obj, jstring cmdIn, jobject buf, jint len){
 	const char *cmd = env->GetStringUTFChars(cmdIn, 0);
-	debug("jniSvmPredict cmd = %s", cmd);
+	//debug("jniSvmPredict cmd = %s", cmd);
 
 	jfloat* input = (jfloat*) env->GetDirectBufferAddress(buf);
 

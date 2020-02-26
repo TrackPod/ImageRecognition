@@ -19,6 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
+    android:tint="@android:color/white"
     tools:context="pp.facerecognizer.CameraActivity" >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,7 +28,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="15dp"
-        android:tint="@android:color/white"
+        android:tint="@android:color/black"
         android:src="@android:drawable/ic_input_add"/>
+
+    <Button
+        android:id="@+id/coordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewFern"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="TextView" />
 
 </FrameLayout>

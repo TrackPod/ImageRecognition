@@ -25,6 +25,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
 import android.net.Uri;
@@ -33,8 +34,10 @@ import android.os.SystemClock;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,6 +48,9 @@ import java.util.List;
 import java.util.Vector;
 
 import androidx.appcompat.app.AlertDialog;
+
+import org.w3c.dom.Text;
+
 import pp.facerecognizer.env.BorderedText;
 import pp.facerecognizer.env.FileUtils;
 import pp.facerecognizer.env.ImageUtils;
@@ -117,6 +123,9 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
                 })
                 .create();
 
+        Button coord = (Button)this.findViewById(R.id.coordButton);
+        coord.setText("oncreate main_act");
+
         button = findViewById(R.id.add_button);
         button.setOnClickListener(view ->
                 new AlertDialog.Builder(MainActivity.this)
@@ -135,6 +144,9 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         if (!initialized)
             init();
+
+//        Button coord = (Button)this.findViewById(R.id.coordButton);
+//        coord.setText("onprevsizechosen main_act");
 
         final float textSizePx =
         TypedValue.applyDimension(
@@ -164,6 +176,7 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
         frameToCropTransform.invert(cropToFrameTransform);
 
         trackingOverlay = findViewById(R.id.tracking_overlay);
+
         trackingOverlay.addCallback(
                 canvas -> {
                     tracker.draw(canvas);
@@ -235,8 +248,14 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
 
     @Override
     protected void processImage() {
+
+
+//        Button coord = (Button)this.findViewById(R.id.coordButton);
+//        coord.setText("processImage main_act");
+
         ++timestamp;
         final long currTimestamp = timestamp;
+
         byte[] originalLuminance = getLuminance();
         tracker.onFrame(
                 previewWidth,
@@ -253,7 +272,7 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
             return;
         }
         computingDetection = true;
-        LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
+        //LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
 
         rgbFrameBitmap.setPixels(getRgbBytes(), 0, previewWidth, 0, 0, previewWidth, previewHeight);
 
@@ -272,14 +291,17 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
 
         runInBackground(
                 () -> {
-                    LOGGER.i("Running detection on image " + currTimestamp);
-                    final long startTime = SystemClock.uptimeMillis();
+                    //LOGGER.i("Running detection on image " + currTimestamp);
+                    //final long startTime = SystemClock.uptimeMillis();
 
                     cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-                    List<Recognizer.Recognition> mappedRecognitions =
-                            recognizer.recognizeImage(croppedBitmap,cropToFrameTransform);
+                    List<Recognizer.Recognition> mappedRecognitions = recognizer.recognizeImage(croppedBitmap,cropToFrameTransform);
 
-                    lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
+                    //coord.setText("" + mappedRecognitions.get(2).getLocation().bottom);
+
+                    //lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
+                    lastProcessingTimeMs = 0;
+
                     tracker.trackResults(mappedRecognitions, luminanceCopy, currTimestamp);
                     trackingOverlay.postInvalidate();
 

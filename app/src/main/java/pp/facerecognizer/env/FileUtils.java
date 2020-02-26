@@ -32,11 +32,11 @@ public class FileUtils {
      * @param filename The location to save the bitmap to.
      */
     public static void saveBitmap(final Bitmap bitmap, final String filename) {
-        LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), ROOT);
+        //LOGGER.i("Saving %dx%d bitmap to %s.", bitmap.getWidth(), bitmap.getHeight(), ROOT);
         final File myDir = new File(ROOT);
 
         if (!myDir.mkdirs()) {
-            LOGGER.i("Make dir failed");
+            //LOGGER.i("Make dir failed");
         }
 
         final File file = new File(myDir, filename);
