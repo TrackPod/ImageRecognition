@@ -295,7 +295,7 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
                     //final long startTime = SystemClock.uptimeMillis();
 
                     cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
-                    List<Recognizer.Recognition> mappedRecognitions = recognizer.recognizeImage(croppedBitmap,cropToFrameTransform);
+                    List<Recognizer.Recognition> mappedRecognitions = recognizer.recognizeImage(croppedBitmap,cropToFrameTransform, this);
 
                     //coord.setText("" + mappedRecognitions.get(2).getLocation().bottom);
 

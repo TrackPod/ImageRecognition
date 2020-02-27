@@ -15,6 +15,7 @@ limitations under the License.
 
 package pp.facerecognizer.tracking;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -39,13 +40,20 @@ import pp.facerecognizer.env.BorderedText;
 import pp.facerecognizer.env.ImageUtils;
 import pp.facerecognizer.env.Logger;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 /**
  * A tracker wrapping ObjectTracker that also handles non-max suppression and matching existing
  * objects to new detections.
  */
 public class MultiBoxTracker {
     private final Logger logger = new Logger();
-
+    private int count = 0;
     private static final float TEXT_SIZE_DIP = 18;
 
     // Maximum percentage of a box that can be overlapped by another box at detection time. Otherwise
@@ -185,6 +193,16 @@ public class MultiBoxTracker {
             getFrameToCanvasMatrix().mapRect(trackedPos);
             boxPaint.setColor(recognition.color);
 
+            if(count % 10 == 0) {
+                RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
+                String url = "http://192.168.4.1/box/" + (trackedPos.left + trackedPos.right) / 2 + "-" + (trackedPos.top + trackedPos.bottom) / 2;
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null, null);
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+            }
+            count++;
+
             final float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
             canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
 
@@ -268,6 +286,13 @@ public class MultiBoxTracker {
 
             logger.v("L: " + detectionScreenRect.left + ", R: " + detectionScreenRect.right + ", T: " + detectionScreenRect.top + ", B: " + detectionScreenRect.bottom);
 
+            // Instantiate the RequestQueue.
+//            RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
+//            String url ="http://192.168.4.1/box/"+(detectionScreenRect.left+detectionScreenRect.right)/2+"-"+(detectionScreenRect.top+detectionScreenRect.bottom)/2;
+//            // Request a string response from the provided URL.
+//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null , null );
+//            // Add the request to the RequestQueue.
+//            queue.add(stringRequest);
 
             screenRects.add(new Pair<>(result.getConfidence(), detectionScreenRect));
 

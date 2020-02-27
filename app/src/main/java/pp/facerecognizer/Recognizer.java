@@ -15,7 +15,9 @@ limitations under the License.
 
 package pp.facerecognizer;
 
+import android.app.DownloadManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +27,7 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
+//import android.util.Log;
 import android.widget.Button;
 
 import java.io.FileDescriptor;
@@ -37,6 +40,13 @@ import pp.facerecognizer.env.FileUtils;
 import pp.facerecognizer.ml.BlazeFace;
 import pp.facerecognizer.ml.FaceNet;
 import pp.facerecognizer.ml.LibSVM;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 /**
  * Generic interface for interacting with different recognition engines.
@@ -146,12 +156,14 @@ public class Recognizer {
         return cs;
     }
 
-    List<Recognition> recognizeImage(Bitmap bitmap, Matrix matrix) {
+    List<Recognition> recognizeImage(Bitmap bitmap, Matrix matrix, Context context) {
 
 
         synchronized (this) {
             List<RectF> faces = blazeFace.detect(bitmap);
             final List<Recognition> mappedRecognitions = new LinkedList<>();
+
+//            Log.i("faces", ""+faces.size());
 
             for (RectF rectF : faces) {
                 Rect rect = new Rect();
@@ -172,9 +184,20 @@ public class Recognizer {
                 Recognition result = new Recognition("" + index, "L:" + rect.left + " R:" + rect.right + " B:" + rect.bottom + " T:" + rect.top + ", ", 0f, rectF);
                 mappedRecognitions.add(result);
             }
+
+            //try sending http stuff here and only send for the first rectF in the list
+
+            if(faces.size() > 0) {
+                RectF detectionScreenRect = faces.get(0);
+                RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
+                String url ="http://192.168.4.1/box/"+(detectionScreenRect.left+detectionScreenRect.right)/2+"-"+(detectionScreenRect.top+detectionScreenRect.bottom)/2;
+                // Request a string response from the provided URL.
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null , null );
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);
+            }
             return mappedRecognitions;
         }
-
     }
 
     void updateData(int label, ContentResolver contentResolver, ArrayList<Uri> uris) throws Exception {
@@ -194,6 +217,8 @@ public class Recognizer {
                 faceNet.getEmbeddings(bitmap, rect).get(emb_array);
                 list.add(emb_array);
             }
+
+//            Log.i("updataData", list.toString());
 
             svm.train(label, list);
         }
