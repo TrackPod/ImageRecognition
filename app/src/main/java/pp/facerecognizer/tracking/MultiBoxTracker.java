@@ -11,6 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+This code has been modified to send http requests to a web server.
 ==============================================================================*/
 
 package pp.facerecognizer.tracking;
@@ -279,20 +281,6 @@ public class MultiBoxTracker {
 
             final RectF detectionScreenRect = new RectF();
             rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
-
-
-            // I think detectionScreenRect is the variable we want to access
-            //logger.v("Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
-
-            logger.v("L: " + detectionScreenRect.left + ", R: " + detectionScreenRect.right + ", T: " + detectionScreenRect.top + ", B: " + detectionScreenRect.bottom);
-
-            // Instantiate the RequestQueue.
-//            RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
-//            String url ="http://192.168.4.1/box/"+(detectionScreenRect.left+detectionScreenRect.right)/2+"-"+(detectionScreenRect.top+detectionScreenRect.bottom)/2;
-//            // Request a string response from the provided URL.
-//            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null , null );
-//            // Add the request to the RequestQueue.
-//            queue.add(stringRequest);
 
             screenRects.add(new Pair<>(result.getConfidence(), detectionScreenRect));
 

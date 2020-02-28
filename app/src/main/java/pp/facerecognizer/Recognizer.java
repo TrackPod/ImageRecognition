@@ -11,6 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+This code may have been modified to send http requests to a web server.
 ==============================================================================*/
 
 package pp.facerecognizer;
@@ -26,9 +28,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
-import android.os.SystemClock;
-//import android.util.Log;
-import android.widget.Button;
 
 import java.io.FileDescriptor;
 import java.nio.FloatBuffer;
@@ -163,8 +162,6 @@ public class Recognizer {
             List<RectF> faces = blazeFace.detect(bitmap);
             final List<Recognition> mappedRecognitions = new LinkedList<>();
 
-//            Log.i("faces", ""+faces.size());
-
             for (RectF rectF : faces) {
                 Rect rect = new Rect();
                 rectF.round(rect);
@@ -177,25 +174,22 @@ public class Recognizer {
 
                 String name = classNames.get(index);
                 //Recognition result = new Recognition("" + index, name, prediction.getProb(), rectF);
-                //sentinel
-
-                //Recognition result = new Recognition("" + index, "l:" + rect.left + " r:" + rect.right + " b:" + rect.bottom + " t:" + rect.top, prediction.getProb(), rectF);
 
                 Recognition result = new Recognition("" + index, "L:" + rect.left + " R:" + rect.right + " B:" + rect.bottom + " T:" + rect.top + ", ", 0f, rectF);
                 mappedRecognitions.add(result);
             }
 
-            //try sending http stuff here and only send for the first rectF in the list
-
-            if(faces.size() > 0) {
-                RectF detectionScreenRect = faces.get(0);
-                RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
-                String url ="http://192.168.4.1/box/"+(detectionScreenRect.left+detectionScreenRect.right)/2+"-"+(detectionScreenRect.top+detectionScreenRect.bottom)/2;
-                // Request a string response from the provided URL.
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null , null );
-                // Add the request to the RequestQueue.
-                queue.add(stringRequest);
-            }
+//            //try sending http stuff here and only send for the first rectF in the list
+//
+//            if(faces.size() > 0) {
+//                RectF detectionScreenRect = faces.get(0);
+//                RequestQueue queue = Volley.newRequestQueue(context.getApplicationContext());
+//                String url ="http://192.168.4.1/box/"+(detectionScreenRect.left+detectionScreenRect.right)/2+"-"+(detectionScreenRect.top+detectionScreenRect.bottom)/2;
+//                // Request a string response from the provided URL.
+//                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, null , null );
+//                // Add the request to the RequestQueue.
+//                queue.add(stringRequest);
+//            }
             return mappedRecognitions;
         }
     }

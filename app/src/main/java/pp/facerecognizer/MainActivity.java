@@ -68,7 +68,7 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
     private static final int CROP_HEIGHT = BlazeFace.INPUT_SIZE_HEIGHT;
     private static final int CROP_WIDTH = BlazeFace.INPUT_SIZE_WIDTH;
 
-    private static final Size DESIRED_PREVIEW_SIZE = new Size(640, 480);
+    private static final Size DESIRED_PREVIEW_SIZE = new Size(1280, 720); //640, 480
 
     private static final boolean SAVE_PREVIEW_BITMAP = false;
     private static final float TEXT_SIZE_DIP = 10;
@@ -123,9 +123,6 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
                 })
                 .create();
 
-        Button coord = (Button)this.findViewById(R.id.coordButton);
-        coord.setText("oncreate main_act");
-
         button = findViewById(R.id.add_button);
         button.setOnClickListener(view ->
                 new AlertDialog.Builder(MainActivity.this)
@@ -144,9 +141,6 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         if (!initialized)
             init();
-
-//        Button coord = (Button)this.findViewById(R.id.coordButton);
-//        coord.setText("onprevsizechosen main_act");
 
         final float textSizePx =
         TypedValue.applyDimension(
@@ -249,10 +243,6 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
     @Override
     protected void processImage() {
 
-
-//        Button coord = (Button)this.findViewById(R.id.coordButton);
-//        coord.setText("processImage main_act");
-
         ++timestamp;
         final long currTimestamp = timestamp;
 
@@ -272,7 +262,7 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
             return;
         }
         computingDetection = true;
-        //LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
+        LOGGER.i("Preparing image " + currTimestamp + " for detection in bg thread.");
 
         rgbFrameBitmap.setPixels(getRgbBytes(), 0, previewWidth, 0, 0, previewWidth, previewHeight);
 
@@ -291,15 +281,11 @@ public class MainActivity extends CameraActivity implements OnImageAvailableList
 
         runInBackground(
                 () -> {
-                    //LOGGER.i("Running detection on image " + currTimestamp);
-                    //final long startTime = SystemClock.uptimeMillis();
+                    LOGGER.i("Running detection on image " + currTimestamp);
 
                     cropCopyBitmap = Bitmap.createBitmap(croppedBitmap);
                     List<Recognizer.Recognition> mappedRecognitions = recognizer.recognizeImage(croppedBitmap,cropToFrameTransform, this);
 
-                    //coord.setText("" + mappedRecognitions.get(2).getLocation().bottom);
-
-                    //lastProcessingTimeMs = SystemClock.uptimeMillis() - startTime;
                     lastProcessingTimeMs = 0;
 
                     tracker.trackResults(mappedRecognitions, luminanceCopy, currTimestamp);

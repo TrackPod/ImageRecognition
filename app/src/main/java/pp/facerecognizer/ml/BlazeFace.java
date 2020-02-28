@@ -30,7 +30,7 @@ public class BlazeFace {
     private static final int NUM_COORDS = 16;
     private static final int BYTE_SIZE_OF_FLOAT = 4;
 
-    private static final float MIN_SCORE_THRESH = 0.95f; //0.95, 0.6
+    private static final float MIN_SCORE_THRESH = 0.95f;
 
     private static final int[] strides = {8, 16, 16, 16};
 

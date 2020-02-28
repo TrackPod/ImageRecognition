@@ -31,9 +31,4 @@
         android:tint="@android:color/black"
         android:src="@android:drawable/ic_input_add"/>
 
-    <Button
-        android:id="@+id/coordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 </FrameLayout>
